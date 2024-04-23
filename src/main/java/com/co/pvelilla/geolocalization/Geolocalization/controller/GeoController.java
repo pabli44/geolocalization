@@ -15,8 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("api/v1/geolocalization")
 public class GeoController {
 
-    private GeoService geoService;
-    private ModelMapper modelMapper;
+    private final GeoService geoService;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public GeoController(final GeoService geoService, final ModelMapper modelMapper){
@@ -45,7 +45,7 @@ public class GeoController {
             return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpTo(ip), GeoDto.class));
         }catch (Exception e){
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
         }
     }
 

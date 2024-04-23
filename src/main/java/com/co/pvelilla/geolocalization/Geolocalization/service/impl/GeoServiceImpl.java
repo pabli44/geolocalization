@@ -46,7 +46,7 @@ public class GeoServiceImpl implements GeoService {
      */
     @Override
     public String loadDBFromCSV() {
-        String line = "";
+        String line;
         String splitBy = ",";
         List<Geo> geoList = new ArrayList<>();
         Geo geoReg;
@@ -82,10 +82,10 @@ public class GeoServiceImpl implements GeoService {
      */
     private String getConvertedIp(String ip) {
         String[] convertedIpSplit = ip.split("\\.");
-        String convertedIp = String.valueOf(
+        return String.valueOf(
                 Long.parseLong(convertedIpSplit[0]) * 16777216 + Long.parseLong(convertedIpSplit[1]) * 65536 +
-                        Long.parseLong(convertedIpSplit[2]) * 256 + Long.parseLong(convertedIpSplit[3]));
-        return convertedIp;
+                        Long.parseLong(convertedIpSplit[2]) * 256 + Long.parseLong(convertedIpSplit[3])
+        );
     }
 
 
