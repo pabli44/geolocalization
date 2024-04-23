@@ -7,10 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestController
@@ -37,7 +35,7 @@ public class GeoController {
             return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpFrom(ip), GeoDto.class));
         }catch (Exception e){
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
         }
     }
 
@@ -47,13 +45,13 @@ public class GeoController {
             return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpTo(ip), GeoDto.class));
         }catch (Exception e){
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @GetMapping(value = "/load")
     public String loadDB() {
-        return geoService.loadDB();
+        return geoService.loadDBFromCSV();
     }
 
 

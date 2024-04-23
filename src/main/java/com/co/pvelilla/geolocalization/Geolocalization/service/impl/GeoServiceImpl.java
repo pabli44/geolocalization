@@ -25,37 +25,44 @@ public class GeoServiceImpl implements GeoService {
 
     @Override
     public Geo findByIpFrom(String ip){
-        return repository.findByIpFrom(ip);
+        String convertedIp = getConvertedIp(ip);
+        return repository.findByIpFrom(convertedIp);
     }
 
+    /**
+     *
+     * @param ip
+     * @return
+     */
     @Override
     public Geo findByIpTo(String ip){
-        return repository.findByIpTo(ip);
+        String convertedIp = getConvertedIp(ip);
+        return repository.findByIpTo(convertedIp);
     }
 
+    /**
+     * Description: Load the db from the .csv data
+     * @return
+     */
     @Override
-    public String loadDB() {
+    public String loadDBFromCSV() {
         String line = "";
         String splitBy = ",";
         List<Geo> geoList = new ArrayList<>();
         Geo geoReg;
-        int counter = 0;
         Integer id = 0;
 
         try {
-            //parsing a CSV file into BufferedReader class constructor
             BufferedReader br = new BufferedReader(new FileReader("src/main/resources/db/ipgeo.csv"));
             while ((line = br.readLine()) != null)
-            //returns a Boolean value
             {
                 String[] geoLine = line.split(splitBy);
                 if(!geoLine[0].contains("IP_from")){
-                    //use comma as separator
-                    geoReg = new Geo(id, geoLine[0], geoLine[1], geoLine[2], geoLine[3], geoLine[4], geoLine[5], geoLine[6], geoLine[7], geoLine[8]);
+                    geoReg = new Geo(id, geoLine[0], geoLine[1], geoLine[2], geoLine[3], geoLine[4], geoLine[5],
+                            geoLine[6], geoLine[7], geoLine[8]);
                     geoList.add(geoReg);
                     id++;
                 }
-                counter ++;
             }
             saveAll(geoList);
 
@@ -66,6 +73,19 @@ public class GeoServiceImpl implements GeoService {
         }
 
         return "Data was loaded!!";
+    }
+
+    /**
+     * Description: Get the converted ip for querying in database
+     * @param ip
+     * @return
+     */
+    private String getConvertedIp(String ip) {
+        String[] convertedIpSplit = ip.split("\\.");
+        String convertedIp = String.valueOf(
+                Long.parseLong(convertedIpSplit[0]) * 16777216 + Long.parseLong(convertedIpSplit[1]) * 65536 +
+                        Long.parseLong(convertedIpSplit[2]) * 256 + Long.parseLong(convertedIpSplit[3]));
+        return convertedIp;
     }
 
 

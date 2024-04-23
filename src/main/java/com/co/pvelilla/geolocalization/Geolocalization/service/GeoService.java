@@ -12,6 +12,6 @@ public interface GeoService {
 
     Geo findByIpTo(String ip);
 
-    String loadDB();
+    String loadDBFromCSV();
 
 }
