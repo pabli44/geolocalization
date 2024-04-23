@@ -14,4 +14,6 @@ public interface GeoService {
 
     String loadDBFromCSV();
 
+    boolean validateIp(String ip);
+
 }

@@ -3,7 +3,6 @@ package com.co.pvelilla.geolocalization.Geolocalization.service.impl;
 import com.co.pvelilla.geolocalization.Geolocalization.entity.Geo;
 import com.co.pvelilla.geolocalization.Geolocalization.repository.GeoRepository;
 import com.co.pvelilla.geolocalization.Geolocalization.service.GeoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -15,18 +14,21 @@ import java.util.List;
 @Service
 public class GeoServiceImpl implements GeoService {
 
-    @Autowired
-    GeoRepository repository;
+    private GeoRepository geoRepository;
+
+    public GeoServiceImpl(final GeoRepository geoRepository){
+        this.geoRepository = geoRepository;
+    }
 
     @Override
     public void saveAll(List<Geo> geoList) {
-        repository.saveAll(geoList);
+        geoRepository.saveAll(geoList);
     }
 
     @Override
     public Geo findByIpFrom(String ip){
         String convertedIp = getConvertedIp(ip);
-        return repository.findByIpFrom(convertedIp);
+        return geoRepository.findByIpFrom(convertedIp);
     }
 
     /**
@@ -37,7 +39,7 @@ public class GeoServiceImpl implements GeoService {
     @Override
     public Geo findByIpTo(String ip){
         String convertedIp = getConvertedIp(ip);
-        return repository.findByIpTo(convertedIp);
+        return geoRepository.findByIpTo(convertedIp);
     }
 
     /**
@@ -73,6 +75,11 @@ public class GeoServiceImpl implements GeoService {
         }
 
         return "Data was loaded!!";
+    }
+
+    @Override
+    public boolean validateIp(String ip){
+        return ip.split("\\.").length==4;
     }
 
     /**

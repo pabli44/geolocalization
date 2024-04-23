@@ -31,22 +31,38 @@ public class GeoController {
 
     @GetMapping(value = "/getGeoByIpFrom/{ip}")
     public ResponseEntity<GeoDto> findByIpFrom(@PathVariable String ip){
+        String message = "entity not found";
+        HttpStatus status = HttpStatus.NOT_FOUND;
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpFrom(ip), GeoDto.class));
-        }catch (Exception e){
+            if(!geoService.validateIp(ip)){
+                message = "Ip is not valid";
+                status = HttpStatus.BAD_REQUEST;
+                throw new ResponseStatusException(status, message);
+            }
+        }catch (ResponseStatusException e){
             log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+            throw new ResponseStatusException(status, message);
         }
+
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpFrom(ip), GeoDto.class));
     }
 
     @GetMapping(value = "/getGeoByIpTo/{ip}")
     public ResponseEntity<GeoDto> findByIpTo(@PathVariable String ip){
+        String message = "entity not found";
+        HttpStatus status = HttpStatus.NOT_FOUND;
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpTo(ip), GeoDto.class));
-        }catch (Exception e){
+            if(!geoService.validateIp(ip)){
+                message = "Ip is not valid";
+                status = HttpStatus.BAD_REQUEST;
+                throw new ResponseStatusException(status, message);
+            }
+        }catch (ResponseStatusException e){
             log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+            throw new ResponseStatusException(status, message);
         }
+
+        return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(geoService.findByIpTo(ip), GeoDto.class));
     }
 
     @GetMapping(value = "/load")
