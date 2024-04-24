@@ -17,6 +17,7 @@ GET
 
 Buscar registro por parámetro ip_from:
 <br>
+GET
 **localhost:8080/api/v1/geolocalization/getGeoByIpFrom/1.0.4.0**
 
 
